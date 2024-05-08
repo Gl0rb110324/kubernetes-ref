@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: PersistentVolumeClaim #define characteristics such as storage class accessmode, and storage size. 
+# note - no storage class specified, uses defualt storage class. In this case it is the minikube hostpath /tmp for local mounting. Inspect the configuration of kubernetes cluster for more information
+metadata:
+  name: grafana-pvc
+  namespace: grafana 
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: grafana-monitoring
+  labels:
+    app: grafana
+  name: grafana
+spec:
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      securityContext:
+        fsGroup: 472 #by default containers run as root user. when fsGroup specified, ensures that all processes in the containers run with the specifed group ID. GID 472 is the grafana user
+        supplementalGroups:
+          - 0 #root user. groups applied to the first process that runs in each container 
+      containers:
+        - name: grafana
+          image: grafana/grafana:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: http-grafana
+              protocol: TCP
+          readinessProbe: #know when a container is ready to start accepting traffic
+            failureThreshold: 3 #restart container after three failed probes
+            httpGet:
+              path: /robots.txt 
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 10 # delay in seconds pefore first probe
+            periodSeconds: 30 # probes sent every 30 seconds
+            successThreshold: 1
+            timeoutSeconds: 2
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 250m
+              memory: 750Mi
+          volumeMounts:
+            - mountPath: /var/lib/grafana #mount file in container directory
+              name: grafana-pv
+      volumes:
+        - name: grafana-pv
+          persistentVolumeClaim:
+            claimName: grafana-pvc
