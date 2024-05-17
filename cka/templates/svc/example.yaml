@@ -7,5 +7,6 @@ spec:
   ports: 
   - port: 8080 #pods in the cluster can access this service by the specific pod name on port 8080
     nodeport: 30050 #clients connecting outside the cluster can connect to the server on this port on any node
+    targetport: 8080
   selector:
-  app: hello-world
+  app: hello-world #label in the pod used for filtering and selecting pods associated with the service
