@@ -17,6 +17,8 @@ kubectl run <pod_name> --dry-run=client --image=<image>:<tag> -o yaml > yaml_con
 kubectl run <pod_name> --image nginx
 k run redis --image redis:alpine --labels tier=db
 k run custom-nginx --image nginx --port 8080
+k get pods -l environment=production,tier=frontend
+k get pod -l env=prod,tier=frontend,bu=finance
 ```
 
 ## Deployments
@@ -51,4 +53,11 @@ k run httpd --image httpd:alpine --port 80 --expose *creates pod AND service - L
 ## deployments
 ```
 k create deployment webapp --image kodekloud/webapp-color --replicas 3
+```
+
+## tains and tolerations
+below. use the command again to remove the taint!
+```
+kubectl taint nodes <node-name> key=value:<taint-effect>
+
 ```

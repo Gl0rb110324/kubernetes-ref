@@ -11,3 +11,5 @@ spec:
     image: nigelpoulton/k8sbook:1.0
     ports:
     - containerPort: 8080
+  #add below if scheduler present
+  #nodename: node01 
