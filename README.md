@@ -61,3 +61,15 @@ below. use the command again to remove the taint!
 kubectl taint nodes <node-name> key=value:<taint-effect>
 
 ```
+
+## nodes
+
+```
+kubectl label pods app=nginx tier=fe ##add label to node
+
+```
+
+## daemonsets
+```
+
+```
