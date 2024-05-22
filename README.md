@@ -73,3 +73,10 @@ kubectl label pods app=nginx tier=fe ##add label to node
 ```
 
 ```
+
+## configmaps
+```
+k describe cm <config_map_name>
+k create cm  webapp-config-map --dry-run=client  -o yaml > cm.yaml
+kubectl create configmap  webapp-config-map --from-literal=APP_COLOR=darkblue --from-literal=APP_OTHER=disregard
+```
