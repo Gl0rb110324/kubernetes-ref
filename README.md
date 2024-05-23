@@ -2,11 +2,13 @@
 
 ## General 
 
+
 ```
 alias k='kubectl'
 alias all='all-namespaces'
 kubectl config set-context --current --namespace default
 k get  <resource> <resource_name> -o yaml > <config_dir>
+k exec app -it -- cat /log/app.log #execute command on pod
 ```
 
 
@@ -79,4 +81,9 @@ kubectl label pods app=nginx tier=fe ##add label to node
 k describe cm <config_map_name>
 k create cm  webapp-config-map --dry-run=client  -o yaml > cm.yaml
 kubectl create configmap  webapp-config-map --from-literal=APP_COLOR=darkblue --from-literal=APP_OTHER=disregard
+```
+
+## secrets
+```
+kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DB_User=root --from-literal=DB_Password=password123
 ```
