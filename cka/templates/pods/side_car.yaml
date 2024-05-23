@@ -21,7 +21,8 @@ spec:
     volumeMounts:
     - mountPath: /var/log/event-simulator/
       name: log-volume
-
+##note that the volumes are shared. the container writes to the main volume and the side car picks
+#this up. Side car then then writes this to, say, a logging area
   volumes:
   - name: log-volume
     hostPath:
