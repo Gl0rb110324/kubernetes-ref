@@ -1,6 +1,6 @@
 # Useful commands
 
-## General 
+## General
 
 
 ```
@@ -33,10 +33,10 @@ k create deployment <deployment_name> --image httpd:2.4-alpine --replicas <repli
 k create deployment redis-deploy --image redis -n dev-ns --replicas 2
 ```
 
-## Namespaces 
+## Namespaces
 Naming convention of reosurces in different namespace:
 <svc_name>.<namespace>.<cluster>.<local>
-- cluster is the cluster domain 
+- cluster is the cluster domain
 - local is the suffix typically set by default
 
 ```
@@ -86,4 +86,11 @@ kubectl create configmap  webapp-config-map --from-literal=APP_COLOR=darkblue --
 ## secrets
 ```
 kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DB_User=root --from-literal=DB_Password=password123
+```
+
+## OS updates and maintenance
+```
+k drain node01 --ignore-daemonsets
+kubectl uncordon node01 #after maintenance done - Deploys new pods to node when scheduled
+kubectl cordon node01 #mark node as unschedulable
 ```
