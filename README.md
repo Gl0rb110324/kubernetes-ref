@@ -94,3 +94,9 @@ k drain node01 --ignore-daemonsets
 kubectl uncordon node01 #after maintenance done - Deploys new pods to node when scheduled
 kubectl cordon node01 #mark node as unschedulable
 ```
+
+cluster upgrades
+```
+kubeadm upgrade plan #check latest version 
+```
+
