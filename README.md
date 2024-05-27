@@ -2,12 +2,13 @@
 
 ## General
 
+kube config file, where secrets and cluster set up is generally stored at ./kube/config
 
 ```
 alias k='kubectl'
 alias all='all-namespaces'
 kubectl config set-context --current --namespace default
-k get  <resource> <resource_name> -o yaml > <config_dir>
+k get  <resource> <resource_name> -o yaml > <config_dir> --as <USER>
 k exec app -it -- cat /log/app.log #execute command on pod
 ```
 
