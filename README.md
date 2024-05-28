@@ -5,6 +5,7 @@
 kube config file, where secrets and cluster set up is generally stored at ./kube/config
 
 ```
+kubectl api-resources #get api groups for specific resources. useful for rolebindings etc
 alias k='kubectl'
 alias all='all-namespaces'
 kubectl config set-context --current --namespace default
