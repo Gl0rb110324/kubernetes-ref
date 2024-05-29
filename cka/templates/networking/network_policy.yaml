@@ -7,9 +7,6 @@ Also, ensure that you allow egress traffic to DNS ports TCP and UDP (port 53) to
 # Payroll Port: 8080
 # Egress Allow: mysql
 # MySQL Port: 3306
-
-
-MySQL Port: 3306
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
