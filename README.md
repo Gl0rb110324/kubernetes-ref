@@ -97,8 +97,14 @@ kubectl uncordon node01 #after maintenance done - Deploys new pods to node when 
 kubectl cordon node01 #mark node as unschedulable
 ```
 
-cluster upgrades
+# cluster upgrades
 ```
 kubeadm upgrade plan #check latest version 
 ```
+# secets
+```
+kubectl create secret docker-registry private-reg-cred --docker-server=myprivateregistry.com:5000 --docker-username=docker_user --docker-password=dock_password --docker-email=dock_user@myprivateregistry.com #within deployment spec, add secret ref in the container in the yaml file 
+```
+
+
 
