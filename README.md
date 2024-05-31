@@ -106,5 +106,13 @@ kubeadm upgrade plan #check latest version
 kubectl create secret docker-registry private-reg-cred --docker-server=myprivateregistry.com:5000 --docker-username=docker_user --docker-password=dock_password --docker-email=dock_user@myprivateregistry.com #within deployment spec, add secret ref in the container in the yaml file 
 ```
 
+# networking
+```
+ip a | grep <node_ip> #grab network interface
+ip link show eth0 #get MAC address
+
+
+```
+
 
 
