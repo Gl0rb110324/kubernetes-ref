@@ -3,6 +3,7 @@
 ## General
 
 kube config file, where secrets and cluster set up is generally stored at ./kube/config
+- container runtie libraries are located on /opt/cni/bin
 
 ```
 kubectl api-resources #get api groups for specific resources. useful for rolebindings etc
@@ -107,10 +108,13 @@ kubectl create secret docker-registry private-reg-cred --docker-server=myprivate
 ```
 
 # networking
+
+![image info](./cka/wKfE6.png)
 ```
 ip a | grep <node_ip> #grab network interface
 ip link show eth0 #get MAC address
-
+ip route show default
+netstat -nplt
 
 ```
 
