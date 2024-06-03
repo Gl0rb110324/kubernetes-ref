@@ -74,6 +74,9 @@ kubectl taint nodes <node-name> key=value:<taint-effect>
 
 ```
 kubectl label pods app=nginx tier=fe ##add label to node
+systemctl start kubelet/containerd #ssh into node
+systemctl status kubelet/containers #ssh into node
+journalctl -u <service_name> -f #-f is similar to tail. Service name = kubelet or containerd
 
 ```
 
@@ -119,7 +122,6 @@ ip link show eth0 #get MAC address
 ip route show default
 netstat -nplt
 kubectl logs <weave-pod-name> -n kube-system #get logs and IPAM range for pods + nodes
-
 ```
 
 
