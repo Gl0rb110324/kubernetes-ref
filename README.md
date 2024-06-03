@@ -115,6 +115,7 @@ ip a | grep <node_ip> #grab network interface
 ip link show eth0 #get MAC address
 ip route show default
 netstat -nplt
+kubectl logs <weave-pod-name> -n kube-system #get logs and IPAM range for pods + nodes
 
 ```
 
