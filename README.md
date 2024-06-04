@@ -114,8 +114,9 @@ kubectl create secret docker-registry private-reg-cred --docker-server=myprivate
 ```
 
 # networking
-
 ![image info](./cka/wKfE6.png)
+![image info](./cka/ingress.png)
+
 ```
 ip a | grep <node_ip> #grab network interface
 ip link show eth0 #get MAC address
