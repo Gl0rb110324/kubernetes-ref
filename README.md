@@ -130,7 +130,7 @@ kubectl logs <weave-pod-name> -n kube-system #get logs and IPAM range for pods +
 kubeadm version plan #see what version you can upgrade
 # Find the latest 1.29 version in the list.
 # It should look like 1.29.x-*, where x is the latest patch.
-vi /etc/apt/sources.list.d/kubernetes.list #edit 1.28 to 1.29
+vi /etc/apt/sources.list.d/kubernetes.list #edit 1.28 to 1.29 here to change visibiltiy
 sudo apt update
 sudo apt-cache madison kubeadm
 sudo systemctl daemon-reload
