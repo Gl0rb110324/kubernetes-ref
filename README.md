@@ -135,6 +135,15 @@ sudo apt update
 sudo apt-cache madison kubeadm
 sudo systemctl daemon-reload
 sudo systemctl restart kubelet
+```
+
+# maintenace - etcd cluster snapshot
+use ps aux | grep etcd to grab the information needed for the command and view etcd version 
+restore a snapshop command below too 
+```
+ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 \
+  --cacert=<trusted-ca-file> --cert=<cert-file> --key=<key-file> \
+  snapshot save <backup-file-location>
 
 ```
 
