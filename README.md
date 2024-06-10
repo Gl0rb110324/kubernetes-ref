@@ -3,8 +3,10 @@
 ## General
 
 kube config file, where secrets and cluster set up is generally stored at ./kube/config
+- container runtie libraries are located on /opt/cni/bin
 
 ```
+kubectl api-resources #get api groups for specific resources. useful for rolebindings etc
 alias k='kubectl'
 alias all='all-namespaces'
 kubectl config set-context --current --namespace default
@@ -35,6 +37,9 @@ k create deployment redis-deploy --image redis -n dev-ns --replicas 2
 ```
 
 ## Namespaces
+
+When you create a Service, it creates a corresponding DNS entry. This entry is of the form <service-name>.<namespace-name>.svc.cluster.local, which means that if a container only uses <service-name>, it will resolve to the service which is local to a namespace. This is useful for using the same configuration across multiple namespaces such as Development, Staging and Production. If you want to reach across namespaces, you need to use the fully qualified domain name (FQDN).
+
 Naming convention of reosurces in different namespace:
 <svc_name>.<namespace>.<cluster>.<local>
 - cluster is the cluster domain
@@ -69,6 +74,9 @@ kubectl taint nodes <node-name> key=value:<taint-effect>
 
 ```
 kubectl label pods app=nginx tier=fe ##add label to node
+systemctl start kubelet/containerd #ssh into node
+systemctl status kubelet/containers #ssh into node
+journalctl -u <service_name> -f #-f is similar to tail. Service name = kubelet or containerd
 
 ```
 
@@ -96,8 +104,48 @@ kubectl uncordon node01 #after maintenance done - Deploys new pods to node when 
 kubectl cordon node01 #mark node as unschedulable
 ```
 
-cluster upgrades
+# cluster upgrades
 ```
 kubeadm upgrade plan #check latest version 
 ```
+# secets
+```
+kubectl create secret docker-registry private-reg-cred --docker-server=myprivateregistry.com:5000 --docker-username=docker_user --docker-password=dock_password --docker-email=dock_user@myprivateregistry.com #within deployment spec, add secret ref in the container in the yaml file 
+```
+
+# networking
+![image info](./cka/wKfE6.png)
+![image info](./cka/ingress.png)
+
+```
+ip a | grep <node_ip> #grab network interface
+ip link show eth0 #get MAC address
+ip route show default
+netstat -nplt
+kubectl logs <weave-pod-name> -n kube-system #get logs and IPAM range for pods + nodes
+```
+
+# maintenance - Upgrading kube cluster
+```
+kubeadm version plan #see what version you can upgrade
+# Find the latest 1.29 version in the list.
+# It should look like 1.29.x-*, where x is the latest patch.
+vi /etc/apt/sources.list.d/kubernetes.list #edit 1.28 to 1.29 here to change visibiltiy
+sudo apt update
+sudo apt-cache madison kubeadm
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+```
+
+# maintenace - etcd cluster snapshot
+use ps aux | grep etcd to grab the information needed for the command and view etcd version 
+restore a snapshop command below too 
+```
+ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 \
+  --cacert=<trusted-ca-file> --cert=<cert-file> --key=<key-file> \
+  snapshot save <backup-file-location>
+
+```
+
+
 
