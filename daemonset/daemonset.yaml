@@ -15,9 +15,34 @@ metadata:
           name: elasticsearch
       spec:
         containers:
-        - name: fluentd-elasticsearch
-          image: registry.k8s.io/fluentd-elasticsearch:1.20
-          resources:
-            requests:
-              cpu: 100m
-              memory: 200Mi
+          - name: fluentd-elasticsearch
+            image: registry.k8s.io/fluentd-elasticsearch:1.20
+            resources:
+              requests:
+                cpu: 100m
+                memory: 200Mi
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub
+        - ${ResourceName} From Stack ${AWS::StackName}
+        - ResourceName: Api
+      StageName: Prod
+      DefinitionBody:
+        openapi: '3.0'
+        info: {}
+        paths:
+          /:
+            get:
+              responses: {}
+      EndpointConfiguration: REGIONAL
+      TracingEnabled: true
+  Feature:
+    Type: AWS::Evidently::Feature
+    Properties:
+      Project: <String>
+      Variations:
+        - VariationName: <String>
+      Name: <String>
