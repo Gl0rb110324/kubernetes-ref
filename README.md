@@ -148,4 +148,9 @@ ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 \
 ```
 
 
+```
+#mock exam 1
+kubectl expose pod messaging --port=6379 --name messaging-service
+```
+
 
