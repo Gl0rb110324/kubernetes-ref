@@ -1,0 +1,14 @@
+---
+- name: Restart Docker
+  service:
+    name: docker
+    state: restarted  
+##restarts docker when prompted by the -notify- line within the tasks. E.g 
+
+
+# - name: Replace document root on default Nginx configuration
+#   replace:
+#     path: /etc/nginx/sites-available/default
+#     regexp: '(\s+)root /var/www/html;(\s+.*)?$'
+#     replace: \g<1>root {{ doc_root }};\g<2>
+#   notify: Restart Nginx

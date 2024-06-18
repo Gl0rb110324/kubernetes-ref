@@ -1,0 +1,8 @@
+#Lynis configuration file. Primarily used to skip certain tests --> append to file /etc/lynis/default.prf
+
+
+#Add the IP name and FQDN to /etc/hosts for proper name resolving
+skip-test=NAME-4404 
+
+#SET expire dates for passwords
+skip-test=AUTH-9282

@@ -1,0 +1,27 @@
+---
+- name: install update OS before installing docker and docker-copose on RHEL 9
+  hosts: local
+  gather_facts: yes
+  vars:
+    rocky9_active_dir_setup_bool: true
+    harden_os_bool: false
+  pre_tasks:
+  - name: Printing out operating system details
+    debug:
+      msg: >-
+        os_family:
+        {{ ansible_facts.os_family }},
+        distro:
+        {{ ansible_facts.distribution }}
+        {{ ansible_facts.distribution_version }},
+        kernel:
+        {{ ansible_facts.kernel }}
+  roles: 
+    - { role: rocky9, when: "ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] >= '9' and harden_os_bool== true" }
+    - { role: rocky9_active_directory, when: "rocky9_active_dir_setup_bool== true"}
+  post_tasks:
+  - name: "Delete appropiate scripts after successfully ran"
+    command: rm -rf /home/scripts
+    when: scripts_migration is succeeded
+  ignore_errors: false
+  become: true

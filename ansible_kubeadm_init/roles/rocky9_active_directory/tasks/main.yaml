@@ -1,0 +1,25 @@
+---
+vars_files:
+  - ./roles/rocky9_active_directory/vars/domain_controller_details.yaml
+- name: Install packages required for active directory domain joining
+  ansible.builtin.yum:
+    name:
+      - sssd
+      - realmd
+      - oddjob
+      - oddjob-mkhomedir
+      - adcli
+      - samba-common
+      - sambda-common-tools
+      - krb5-workstation
+      - openldap-clients
+      - policycoreutils-python
+    state: present
+  register: ad_packages_debug
+- debug: msg="{{ ad_packages_debug }}"
+- name: join current RHEL system to active directory domain
+  command: sudo realm join --user={{ host_1_domain_user_account_name }} {{ edge_compute_ad_domain_name }}
+  register: check_domain_joined
+- debug: msg="{{ check_domain-joined }}"
+#/etc/sssd/sssd.conf copy rock9 template. use as baseline script to set up dynamic dns and verification for AD
+

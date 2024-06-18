@@ -1,0 +1,42 @@
+---
+- name: remote execution of commands via hosts
+  command: echo 'hello world!'
+  register: echo_test
+  ignore_errors: true
+- debug: msg="{{ echo_test.stdout }}"
+- name: Add Docker repo
+  get_url:
+    url: "https://download.docker.com/linux/centos/docker-ce.repo"
+    dest: /etc/yum.repos.d/docer-ce.repo    
+- name: Enable Docker Edge & Test repo
+  ini_file:
+    dest: /etc/yum.repos.d/docer-ce.repo
+    section: "{{ item }}"
+    option: enabled
+    value: 0
+  with_items: ['docker-ce-test', 'docker-ce-edge']
+- name: Install Docker
+  dnf:
+    name: docker-ce
+    state: present
+- name: Install docker-compose
+  get_url: 
+    url : https://github.com/docker/compose/releases/download/v{{ docker_compose_version }}/docker-compose-linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: +x
+- name: Start and enable Docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
+- name: Copy monitoring stack source code to ansible host
+  copy:
+    src: /home/chung.tran/repositories/ansible_terraform/ansible/roles/docker/files/ 
+    dest: /home/chung.tran/test/
+    remote_src: yes
+    directory_mode: yes
+- name: run monitoring stack with docker compose
+  # command: chdir=/home/chung.tran/test/ /bin/bash/ docker-compose up -d
+  command: bash -lc "cd /home/chung.tran/test/"
+  register: docker_compose_logs
+  become: true

@@ -1,0 +1,47 @@
+---
+  - name: update Rocky 9 system using DNF package manager
+    dnf:
+      name:  "*"
+      state: latest
+    register: package_update_response
+  - debug: msg="{{ package_update_response }}"
+  - name: install lynis CIS auditing tool
+    dnf:
+      name: "lynis"
+      state: latest
+  - name: remove addition log files relating to application crashes on system. Setting Core Dump secuirty limits
+    command: echo '* hard core 0' > /etc/security/limits.conf
+  - name: Move CIS.conf file that disables specific protocols and features to reduce attack surface
+    copy: src=./roles/rocky9/files/CIS.conf dest=/etc/modprobe.d
+  - name: "[AUTH-9328] set default file permission for newly created ones"
+    command: sed -i "s/^UMASK.*/UMASK 027/g" /etc/login.defs
+  - name: modify default lynis configuration. Primarily skip certain tests. See /files/custom.prf
+    command: echo -e "\nskip-test=NAME-4404\nskip-test=AUTH-9282" >> file.conf
+  - name: "[HRDN-7230] Install AIDE (advanced intrusion detection environment) and configure"
+    shell: |
+      dnf install aide -y
+      aide --init
+      cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+    when: 
+  - name: "[KRNL-6000] change sysctl value"
+    copy: src=./roles/rocky9/files/99-sysctl.conf dest=/etc/sysctl.d
+  - name: "[HRDN-7230] add malware scanner. Runs scan automatically at 1am Everyday"
+    shell: |
+      dnf install clamav clamd -y > /dev/null
+      clamscan --version
+      freshclam
+      systemctl enable --now clamav-freshclam
+      crontab -l | { cat; echo "0 1 * * * /usr/bin/clamscan -r --bell -i / > /var/log/clamav/scan.log"; } | crontab -
+  - name: "Transfer hardening scripts"
+    copy: src=./roles/rocky9/scripts dest=/home
+    register: scripts_migration
+  - name: Execute file mod script
+    command: sh /home/scripts/chmod.sh
+  - name: "[SSH-7408] Transfer SSH-config change script"
+    copy: src=./roles/rocky9/scripts/ssh_config.sh dest=/home
+  - name: "[SSH-7408] Execute SSH-config script"
+    command: sh /home/scripts/ssh_config.sh
+  - name: "[BANN-7126-7130] Execute add_banner script"
+    command: sh /home/scripts/add_banner.sh
+  - name: "[AUTH-9229-9230-9882] Execute pwd script"
+    command: sh /home/scripts/pwd_hash.sh
